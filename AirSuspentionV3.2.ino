@@ -6,6 +6,7 @@
 int tempTimer = 1;
 int tempTimer2 = 1;
 int tempTimer3 = 1;
+int tempIfSwitch = 0;
 
 ////////// Constants
 #define ePin  PB4 // Engine ON
@@ -109,7 +110,7 @@ struct {
   int pVAG ;
   int pRES ;
   int wait;
-  int cBlur;
+  int cBlur = 10;
   int airPowerT = 0;
   int shiftL = 0; // Экспериментальный сдвиг
   int shiftR = 0; // Экспериментальный сдвиг
@@ -159,7 +160,7 @@ void setup() {
   lcd.init();
   lcd.createChar(1, up);
   lcd.createChar(2, down);
-  //Serial.begin();
+  Serial.begin();
   HwSerial.begin(115200);
   pinMode(ePin, INPUT);
   pinMode(dPin, INPUT);
@@ -191,40 +192,39 @@ void setup() {
   ADCP.setVoltageRange_mV(ADS1115_RANGE_6144);
   //GetPreSetup();// Начальная инициализация параметров и состояния
   GetLevelHwSetup(); // Инициализация записаных значений настроек датчиков
-  //GetLevelInvent(cStatus.nomPreset);
+  GetLevelInstance(cStatus.nomPreset);
   delay(500);
   lcd.init();
   lcd.clear();
 }
 
-sTimeer MainTime = {0, 100};
+sTimeer MainTime = {0, 250};
 sTimeer LowTasklTime = {0, 2000};
-sTimeer InterfaceTime = {0, 200};
+sTimeer InterfaceTime = {0, 500};
 
 void loop() {
 
   unsigned long currentMillis = millis();
   if (currentMillis - MainTime.previous >= MainTime.period) {
-    MainTime.previous = currentMillis;
     MainTask();
     tempTimer3 = tempTimer2;
     tempTimer2 = 0;
+    MainTime.previous = currentMillis;
   } else {
     tempTimer2++;
   }
 
   if (currentMillis - LowTasklTime.previous >= LowTasklTime.period) {
-    LowTasklTime.previous = currentMillis;
     LowSerialTask();
     tempTimer = 0;
+    LowTasklTime.previous = currentMillis;
   } else {
     tempTimer++;
   }
 
   if (currentMillis - InterfaceTime.previous >= InterfaceTime.period) {
-    InterfaceTime.previous = currentMillis;
     PanelTask();
-
+    InterfaceTime.previous = currentMillis;
   }
 
 }

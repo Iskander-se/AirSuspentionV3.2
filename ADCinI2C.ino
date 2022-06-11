@@ -14,7 +14,7 @@ void GetLevels() {
     curSuspention[i].Avg = (curSuspention[i].Avg * 4 + cVar) / 5;
     curSuspention[i].Max = (curSuspention[i].Max < cVar) ? cVar : (curSuspention[i].Max * 5 + curSuspention[i].Avg) / 6;
     curSuspention[i].Min = (curSuspention[i].Min > cVar) ? cVar : (curSuspention[i].Min * 5 + curSuspention[i].Avg) / 6;
-    curSuspention[i].Apld = (curSuspention[i].Max - curSuspention[i].Min) / 2;
+    curSuspention[i].Apld = (curSuspention[i].Max - curSuspention[i].Min);
   }
 
 }
