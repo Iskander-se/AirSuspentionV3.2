@@ -52,7 +52,7 @@ void fCheckWarnings() {
   if (cWarningArr.Valves > 70) {
     cWarningArr.Valves = 0;
     alert = 1;
-    cAlertArr.Valves = "V" + String(IntentSetBL.FL) + ":" + String(IntentSetBL.FR) + ":" + String(IntentSetBL.RL) + ":" + String(IntentSetBL.RR) + ":" + String(IntentSetBL.SWITCH) + "|" + String(cStatus.pVAG);
+    cAlertArr.Valves = String(IntentSetBL.FL > 0) + String(IntentSetBL.FR > 0) + String(IntentSetBL.RL > 0) + String(IntentSetBL.RR > 0) + String(IntentSetBL.SWITCH) + "P" + String(cStatus.pVAG);
     Switch2Manual();
   }
   cStatus.alert = alert;

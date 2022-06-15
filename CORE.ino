@@ -2,18 +2,26 @@ void MainTask() {
   fAirPowerT();
   GetLevels();
   GetPressure();
+  GetFlags();
+  if (cStatus.engine < 40) {
+    cStatus.wait = 30;
+  }
+
   if (cStatus.manual) fManualMode();
   else {
     fLevelBain();
     fSUBcore();
   }
+  if (cStatus.wait > 0)cStatus.wait --;
   // VAG-MB Block is doing its job
   fVAGBlockWork();
+  sWorkSend2HU();
+  sCurHWLevel2HU();
 }
 
 void LowSerialTask() {
   fCheckWarnings();
-  BTseriallog();
+  Seriallog();
   if (cAlertArr.Valves != NULL) SerialAlertSend2HU("v", cAlertArr.Valves);
   if (cAlertArr.Power != NULL) SerialAlertSend2HU("p", cAlertArr.Power);
 }
@@ -40,7 +48,8 @@ void PanelTask() {
   }
   fLCDView4Int(curArr);
   fLCDViewIntents();
-  fLCDViewAuto();
+  if (cStatus.manual)fLCDViewStM();
+  else fLCDViewAuto();
 
 }
 

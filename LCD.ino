@@ -37,14 +37,49 @@ void fLCDViewAuto() {
   if (LCDTimer > 10) LCDTimer = 0;
   LCDTimer++;
   lcd.setCursor(5, 1);
-  switch (LCDTimer) {
-    case 1: lcd.print(cStatus.pRES); lcd.print("kpa"); lcd.print(cWarningArr.Power);
-      break;
-    case 5: lcd.print(tempTimer3); lcd.print(" ");
-      break;
-
+  if (LCDTimer < 8) {
+    lcd.print(cStatus.pRES);
+    if (cAlertArr.Power != NULL) lcd.print("A!  ");
+    else lcd.print("kpa ");
   }
-  //  lcd.setCursor(5, 1); lcd.print(cStatus.pRES); lcd.print(" "); lcd.print(cWarningArr.Valves);
-  //  if (cAlertArr.Power != NULL) lcd.print("A!");
-  //  else lcd.print(" ");
+  else {
+    lcd.print(tempTimer3); lcd.print(" ");
+  }
+}
+
+void fLCDViewStM() {
+  if (cStatus.manual == 1) {
+    lcd.clear();
+    cStatus.manual = 2;
+  }
+  if (LCDTimer > 13) LCDTimer = 0;
+  LCDTimer++;
+  lcd.setCursor(6, 0); lcd.print("man");
+  lcd.setCursor(5, 1);
+  switch (LCDTimer) {
+    case 1: if (cAlertArr.Valves != NULL) {
+        lcd.print("VAGeRR!");
+        break;
+      }
+    case 3: if (cAlertArr.BanksF != NULL) {
+        lcd.print("FT-eRR!");
+        break;
+      }
+    case 5: if (cAlertArr.BanksR != NULL) {
+        lcd.print("RT-eRR!");
+        break;
+      }
+    case 7: if (cAlertArr.Power != NULL) {
+        lcd.print("AIReRR!");
+        break;
+      }
+    case 9: lcd.print(cStatus.pRES); lcd.print("kpa ");
+  }
+}
+
+void fLCDViewSaveStr(byte nom)
+{
+  lcd.setCursor(0, nom); lcd.print("#");
+  lcd.setCursor(15, nom); lcd.print("#");
+  lcd.setCursor(6, 1); lcd.print("SAVE");
 }
