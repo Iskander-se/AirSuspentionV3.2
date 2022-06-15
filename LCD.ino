@@ -20,7 +20,7 @@ void fLCDViewIntents() {
     lcd.setCursor(15, 1); if (IntentSetBL.RR) lcd.write(0xFF); else lcd.print(" ");
   }
 }
-
+int LCDTimer = 0;
 void fLCDViewAuto() {
   lcd.setCursor(5, 0); lcd.print(cStatus.pVAG);
   switch (IntentSetBL.SWITCH) {
@@ -34,7 +34,17 @@ void fLCDViewAuto() {
       break;
     default: lcd.print(" --");
   }
-//  lcd.setCursor(5, 1); lcd.print(cStatus.pRES); lcd.print(" "); lcd.print(cWarningArr.Valves);
-//  if (cAlertArr.Power != NULL) lcd.print("A!");
-//  else lcd.print(" ");
+  if (LCDTimer > 10) LCDTimer = 0;
+  LCDTimer++;
+  lcd.setCursor(5, 1);
+  switch (LCDTimer) {
+    case 1: lcd.print(cStatus.pRES); lcd.print("kpa"); lcd.print(cWarningArr.Power);
+      break;
+    case 5: lcd.print(tempTimer3); lcd.print(" ");
+      break;
+
+  }
+  //  lcd.setCursor(5, 1); lcd.print(cStatus.pRES); lcd.print(" "); lcd.print(cWarningArr.Valves);
+  //  if (cAlertArr.Power != NULL) lcd.print("A!");
+  //  else lcd.print(" ");
 }

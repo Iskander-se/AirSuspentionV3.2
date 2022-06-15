@@ -37,3 +37,17 @@ void GetLevelHwSetup()
     HighLevels[i] = EEPROM_Int_read(levelHwAddress[1] + i * 2);
   }
 }
+
+void Switch2Manual() {
+  EEPROM.update(ManualAddr, 1);
+  cStatus.manual = 1;
+  cStatus.servicemode = 0;
+}
+
+void Switch2Auto() {
+  EEPROM.update(ManualAddr, 0);
+  cStatus.manual = 0;
+  cStatus.servicemode = 0;
+  waitLowUpF = 0;
+  waitLowUpR = 0;
+}

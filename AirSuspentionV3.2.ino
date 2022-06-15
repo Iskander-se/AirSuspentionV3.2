@@ -60,6 +60,16 @@ struct {
   byte Power = 0;
 } cWarningArr;
 
+struct {
+  String Levels;
+  String Valves;
+  String BanksF;
+  String BanksR;
+  String Power;
+  String RES;
+  int timer = 0;
+} cAlertArr;
+
 ///////// Variables
 int16_t LowLevels[4];
 int16_t HighLevels[4];
@@ -161,7 +171,7 @@ void setup() {
   lcd.createChar(1, up);
   lcd.createChar(2, down);
   Serial.begin();
-  HwSerial.begin(115200);
+  HwSerial.begin(57600);
   pinMode(ePin, INPUT);
   pinMode(dPin, INPUT);
   pinMode(bN1pin, INPUT);
@@ -217,6 +227,7 @@ void loop() {
   if (currentMillis - LowTasklTime.previous >= LowTasklTime.period) {
     LowSerialTask();
     tempTimer = 0;
+    
     LowTasklTime.previous = currentMillis;
   } else {
     tempTimer++;

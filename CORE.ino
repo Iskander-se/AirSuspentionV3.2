@@ -1,17 +1,27 @@
 void MainTask() {
+  fAirPowerT();
   GetLevels();
-  fLevelBain();
   GetPressure();
+  if (cStatus.manual) fManualMode();
+  else {
+    fLevelBain();
+    fSUBcore();
+  }
+  // VAG-MB Block is doing its job
+  fVAGBlockWork();
 }
 
 void LowSerialTask() {
+  fCheckWarnings();
   BTseriallog();
+  if (cAlertArr.Valves != NULL) SerialAlertSend2HU("v", cAlertArr.Valves);
+  if (cAlertArr.Power != NULL) SerialAlertSend2HU("p", cAlertArr.Power);
 }
 
 void PanelTask() {
   GetKey();
   int curArr[4];
-  cStatus.lcdv = cMenu.shift+1;
+  cStatus.lcdv = cMenu.shift + 1;
   switch (cStatus.lcdv) {
     case 0:
       for (int i = 0; i < 4; i++) curArr[i] = IntentHeap.curTargetLevels[i] / 10;
@@ -34,25 +44,79 @@ void PanelTask() {
 
 }
 
-void BTseriallog() {
-  lcd.setCursor(5, 1); lcd.print(tempTimer3); lcd.print(" ");
-  String str = "";
-  str = str + String(tempTimer, DEC);
-  str = str + " ";
-  str = str + String(tempTimer3, DEC);
-
-  str = str + " || wait:" + String(cStatus.wait) + " S:" + String(cStatus.servicemode) + " M:" + String(cStatus.manual);
-  str = str + " || " + String(IntentSetBL.FL) + "-" + String(IntentSetBL.FR) + "-" + String(IntentSetBL.RL)+ "-" + String(IntentSetBL.RR)+ "-" + String(IntentSetBL.SWITCH);
-  //  BtSerial.print(" wLowUpF:"); BtSerial.print(waitLowUpF);
-  //  BtSerial.print(" wLowUpR:"); BtSerial.print(waitLowUpR);
-  str = str + " ||  ";
-  for (int i = 0; i < 4; i++) {
-    str = str + " RAW:" + String(curSuspention[i].RAW, DEC);
-    str = str + " Avg:" + String(curSuspention[i].Avg/10, DEC);
-    str = str + " Max:" + String(curSuspention[i].Max/10, DEC);
-    str = str + " Min:" + String(curSuspention[i].Min/10, DEC);
-    str = str + " D:" + String(curSuspention[i].Apld, DEC);
+void fVAGBlockWork() {
+  if (ValveSet.SWITCH > 2 && (ValveSet.FL || ValveSet.FR || ValveSet.RL || ValveSet.RR)) ValveSet.SWITCH = 0;
+  switch (ValveSet.SWITCH) {
+    case 1 : //UP
+      digitalWrite(vEXH, 0);
+      if (cStatus.pRES > 800) {         //  work it from reciver
+        digitalWrite(vRES, 1);
+        digitalWrite(vPC, 0);
+        ValveSet.WP = 0;
+      } else if (cStatus.pRES < 650) { ///  work it without reciver
+        digitalWrite(vRES, 0);
+        digitalWrite(vPC, 1);
+        ValveSet.WP = 2;
+      } else {                         // compressor + reciver
+        ValveSet.WP = 1;
+        digitalWrite(vRES, 1);
+        digitalWrite(vPC,  cStatus.airPowerF);
+      }
+      break;
+    case 2:  //DOWN
+      digitalWrite(vEXH, 1);
+      digitalWrite(vRES, 0);
+      digitalWrite(vPC, 0);
+      ValveSet.WP = 0;
+      break;
+    case 3:  //CRARGE
+      cStatus.airPowerF = 1;
+      fChargeRES();
+      break;
+    case 4:  //FREE2CRARGE
+      if (cStatus.wait > 1) cStatus.airPowerF = 0;
+      if ((cStatus.pRES > 350 && cStatus.pRES < 860) || ValveSet.WP == 1) {
+        ValveSet.WP = 1;
+        fChargeRES();
+      }
+      else {
+        digitalWrite(vEXH, 0);    digitalWrite(vRES, 0);    digitalWrite(vPC, 0);
+      }
+      break;
+    case 5:  //Transit
+      digitalWrite(vEXH, 0);
+      digitalWrite(vRES, 1);
+      digitalWrite(vPC, 0);
+      break;
+    default:
+      digitalWrite(vEXH, 0);
+      digitalWrite(vRES, 0);
+      digitalWrite(vPC, 0);
   }
-  HwSerial.println(str);
-  Serial.println(str);
+  digitalWrite(vFL, ValveSet.FL);
+  digitalWrite(vFR, ValveSet.FR);
+  digitalWrite(vRL, ValveSet.RL);
+  digitalWrite(vRR, ValveSet.RR);
+}
+
+void fChargeRES()
+{
+  if (cStatus.airPowerF == 2) {
+    digitalWrite(vEXH, 0);
+    digitalWrite(vRES, 0);
+    digitalWrite(vPC, 0);
+    ValveSet.WP = 0;
+    return;
+  }
+  if (cStatus.pRES > 980 && ValveSet.SWITCH != 3) {
+    cStatus.airPowerF = 2; // OVER
+    digitalWrite(vEXH, 1);
+    digitalWrite(vRES, 0);
+    digitalWrite(vPC, 0);
+  } else {
+    digitalWrite(vEXH, 0);
+    digitalWrite(vRES, cStatus.airPowerF);
+    digitalWrite(vPC, cStatus.airPowerF);
+  }
+  return;
 }
