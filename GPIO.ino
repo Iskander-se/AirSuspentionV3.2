@@ -10,13 +10,13 @@ void GetKey()
 
   if (digitalRead(bN2pin) == LOW) {
     tone(piPin, 200, 10);
-    cMenu.wait = 22;    
+    cMenu.wait = 20;    
     cMenu.shift--;
   } 
 
   if (digitalRead(bN3pin) == LOW) {
     tone(piPin, 300, 10);
-    cMenu.wait = 22;
+    cMenu.wait = 20;
     cMenu.shift++;
   } 
 

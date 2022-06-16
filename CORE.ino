@@ -12,10 +12,11 @@ void MainTask() {
     fLevelBain();
     fSUBcore();
   }
-  if (cStatus.wait > 0)cStatus.wait --;
+  if (cStatus.wait > 0) cStatus.wait --;  
   // VAG-MB Block is doing its job
   fVAGBlockWork();
-  sWorkSend2HU();
+  // if VAG block does working is send its composite
+  if (ValveSet.SWITCH != 4) sWorkSend2HU();
   sCurHWLevel2HU();
 }
 
@@ -28,8 +29,13 @@ void LowSerialTask() {
 
 void PanelTask() {
   GetKey();
+//  if (cMenu.wait > 0) cMenu.wait --;
+//  else cMenu.nom = 0;
+//  if (cMenu.nom) {
+//    fLCDmenu();
+//    return;
+//  }
   int curArr[4];
-  cStatus.lcdv = cMenu.shift + 1;
   switch (cStatus.lcdv) {
     case 0:
       for (int i = 0; i < 4; i++) curArr[i] = IntentHeap.curTargetLevels[i] / 10;
@@ -50,7 +56,8 @@ void PanelTask() {
   fLCDViewIntents();
   if (cStatus.manual)fLCDViewStM();
   else fLCDViewAuto();
-
+  // sometimes send if OK and free woking in VAG-block
+  if (ValveSet.SWITCH == 4) sWorkSend2HU();
 }
 
 void fVAGBlockWork() {
