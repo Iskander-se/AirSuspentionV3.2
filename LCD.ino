@@ -39,14 +39,15 @@ void fLCDViewAuto() {
   lcd.setCursor(5, 1);
   switch (LCDTimer) {
     case 1:
+    case 5:
       lcd.print(cStatus.pRES);
       if (cAlertArr.Power != NULL) lcd.print("A!  ");
-      else lcd.print("kpa ");
+      else lcd.print(" "); lcd.print(cStatus.cBlur);
       break;
      case 8:
         lcd.print(tempTimer3); lcd.print(" ");
-
   }
+}
 
   void fLCDViewStM() {
     if (cStatus.manual == 1) {

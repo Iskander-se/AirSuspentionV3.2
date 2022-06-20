@@ -51,3 +51,54 @@ void Switch2Auto() {
   waitLowUpF = 0;
   waitLowUpR = 0;
 }
+void GetPreSetup()
+{
+  //cStatus.servicemode;
+  cStatus.manual = EEPROM.read(ManualAddr);
+  cStatus.lcdv = EEPROM.read(lcdvAddr);
+  cStatus.nomPreset = EEPROM.read(PresetAddr);
+}
+
+void SetPreSetup()
+{
+  EEPROM.update(ManualAddr, cStatus.manual);
+  EEPROM.update(lcdvAddr, cStatus.lcdv);
+  EEPROM.update(PresetAddr, cStatus.nomPreset);
+}
+void ReadLevelPreset(byte addr)
+{
+  EEPROM_Level_read(firstValueAddress + addr * 2, cStatus.PresetLevels);
+}
+
+void SaveSetLevelPreset(byte nomPreset) {
+  EEPROM.update(PresetAddr, nomPreset);
+  Switch2Auto();
+}
+
+byte fSaveMinMax(byte nom)
+{
+  byte r = 0;
+  switch (nom) {
+    case 1:  //min F
+      EEPROM_Int_Write(levelHwAddress[0] + 0, curSuspention[0].RAW);
+      EEPROM_Int_Write(levelHwAddress[0] + 2, curSuspention[1].RAW);
+      r = 1;
+      break;
+    case 2:  //min R
+      EEPROM_Int_Write(levelHwAddress[0] + 4, curSuspention[2].RAW);
+      EEPROM_Int_Write(levelHwAddress[0] + 6, curSuspention[3].RAW);
+      r = 2;
+      break;
+    case 3:   //max F
+      EEPROM_Int_Write(levelHwAddress[1] + 0, curSuspention[0].RAW);
+      EEPROM_Int_Write(levelHwAddress[1] + 2, curSuspention[1].RAW);
+      r = 1;
+      break;
+    case 4:   //max R
+      EEPROM_Int_Write(levelHwAddress[1] + 4, curSuspention[2].RAW);
+      EEPROM_Int_Write(levelHwAddress[1] + 6, curSuspention[3].RAW);
+      r = 2;
+      break;
+  }
+  return r;
+}

@@ -161,6 +161,7 @@ struct SerialPack {
   char command;
   byte nom;
   int8_t data[2];
+  byte port;
 } packFromHU;
 
 void setup() {
@@ -200,10 +201,14 @@ void setup() {
   }
   ADCS.setVoltageRange_mV(ADS1115_RANGE_6144);
   ADCP.setVoltageRange_mV(ADS1115_RANGE_6144);
-  //GetPreSetup();// Начальная инициализация параметров и состояния
+  GetPreSetup();// Начальная инициализация параметров и состояния
   GetLevelHwSetup(); // Инициализация записаных значений настроек датчиков
   GetLevelInstance(cStatus.nomPreset);
-  delay(500);
+  
+  for (int i = 0; i < 10; i++ ){
+    GetLevels();
+    delay(50);
+  }
   lcd.init();
   lcd.clear();
 }
@@ -227,7 +232,7 @@ void loop() {
   if (currentMillis - LowTasklTime.previous >= LowTasklTime.period) {
     LowSerialTask();
     tempTimer = 0;
-    
+
     LowTasklTime.previous = currentMillis;
   } else {
     tempTimer++;

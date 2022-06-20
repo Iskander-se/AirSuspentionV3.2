@@ -2,7 +2,7 @@ void GetKey()
 {
   if (digitalRead(bN1pin) == LOW) {
     tone(piPin, 400, 10);
-    cMenu.wait = 40;
+    cMenu.wait = 25;
     if (cStatus.alert && !cStatus.mute) cStatus.mute = true;
     cMenu.nom++;
     cMenu.shift = 0;

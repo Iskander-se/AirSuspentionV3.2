@@ -1,3 +1,76 @@
+SerialPack SerialRead()
+{
+  char bufferArr[100], ch;
+  SerialPack cPack;
+  cPack.command = 0;
+  int i = 0;
+
+  while ( Serial.available()) {
+    delay(1);
+    HwSerial.println("   Serial.available():");
+    ch = Serial.read();
+    if (ch == '^') {
+      break;
+    }
+    if (ch == '@') i = 0;
+    if (ch > 30) bufferArr[i++] = ch;
+  }
+
+  if (i > 0)  {
+    cPack = sfParcer(i, bufferArr);
+    cPack.port = 0;
+  }
+
+  if (cPack.command == 0) {
+    while ( HwSerial.available()) {
+      delay(1);
+      ch = HwSerial.read();
+      if (ch == '^') {
+        break;
+      }
+      if (ch == '@') i = 0;
+      if (ch > 30) bufferArr[i++] = ch;
+    }
+    if (i > 0)  {
+      HwSerial.print("sfParcer");
+      cPack = sfParcer(i, bufferArr); 
+      cPack.port = 1;
+    }
+   
+  }
+
+  return cPack;
+}
+
+SerialPack sfParcer(int i, char bufferArr[100])
+{
+  SerialPack cPack;
+  cPack.command = bufferArr[1];
+  switch (i) {
+    case 5:
+      cPack.nom = bufferArr[2] - '0';
+      break;
+    case 8:
+      cPack.nom = bufferArr[2] - '0';
+      cPack.data[0] = Dchar2hex(bufferArr[4], bufferArr[5]);
+      cPack.data[1] = Dchar2hex(bufferArr[6], bufferArr[7]);
+      break;
+    default:
+      cPack.nom = bufferArr[2] - '0';
+      if (cPack.command == 'c') {
+        cPack.data[0] = bufferArr[4];
+        cPack.data[1] = bufferArr[5];
+      }
+  }
+
+  return cPack;
+  //@p5:*^
+  //@m1:1000^
+}
+
+/////////////////////////////// Sendersess   ///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
 void SerialAlertSend2HU(String pp, String msg) {
   String str = "@a:";
   str = str + String(pp) + ":";
@@ -5,6 +78,16 @@ void SerialAlertSend2HU(String pp, String msg) {
 
   Serial.println(str);
   HwSerial.println(str);
+}
+
+void sSavedLevelSend2HU(char nom, int8_t cArray[2], int port) {
+  String str = "@l:";
+  str = str + String(nom, DEC) + ":";
+  if (cArray[0] < 15)str = str + String('0'); str = str + String(cArray[0], HEX);
+  if (cArray[1] < 15)str = str + String('0'); str = str + String(cArray[1], HEX);
+  str = str + "^";
+  if (port == 0)Serial.println(str);
+  else HwSerial.println(str);
 }
 
 void sWorkSend2HU() {
@@ -20,6 +103,7 @@ void sWorkSend2HU() {
   Serial.println(str);
   HwSerial.println(str);
 }
+
 void sCurHWLevel2HU() {
   String str = "@l:c:";
   int curArr[4];
@@ -53,5 +137,4 @@ void Seriallog() {
   }
   Serial.println(str);
   //HwSerial.println(str);
-
 }

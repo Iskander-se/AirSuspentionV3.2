@@ -10,9 +10,16 @@ void MainTask() {
   if (cStatus.manual) fManualMode();
   else {
     fLevelBain();
-    fSUBcore();
+    if (cStatus.door < 2 ) IntentSetBL.SWITCH = 0;
+    else if ((cStatus.door > 10) && (cStatus.door < 200)) cStatus.cBlur = 0;
+    else cStatus.cBlur = 10;
+    
+    if (!cMenu.nom) {
+      fSUBcore();
+    }
   }
-  if (cStatus.wait > 0) cStatus.wait --;  
+  fSerialWorker();
+  if (cStatus.wait > 0) cStatus.wait --;
   // VAG-MB Block is doing its job
   fVAGBlockWork();
   // if VAG block does working is send its composite
@@ -29,12 +36,12 @@ void LowSerialTask() {
 
 void PanelTask() {
   GetKey();
-//  if (cMenu.wait > 0) cMenu.wait --;
-//  else cMenu.nom = 0;
-//  if (cMenu.nom) {
-//    fLCDmenu();
-//    return;
-//  }
+  if (cMenu.wait > 0) cMenu.wait --;
+  else cMenu.nom = 0;
+  if (cMenu.nom) {
+    fLCDmenu();
+    return;
+  }
   int curArr[4];
   switch (cStatus.lcdv) {
     case 0:
@@ -52,10 +59,12 @@ void PanelTask() {
     default:
       for (int i = 0; i < 4; i++) curArr[i] = curSuspention[i].Avg / 10;
   }
+
   fLCDView4Int(curArr);
   fLCDViewIntents();
   if (cStatus.manual)fLCDViewStM();
   else fLCDViewAuto();
+
   // sometimes send if OK and free woking in VAG-block
   if (ValveSet.SWITCH == 4) sWorkSend2HU();
 }

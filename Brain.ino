@@ -24,7 +24,6 @@ void fLevelBain()
 
     if ((curFDeviation < curRDeviation) || (curFDeviation < curRDeviation / 2 && IntentSetBL.SWITCH == 1)) {
       //    _ x ~   /////////////////////////////////////
-      //tempIfSwitch = 2;
       if (IntentHeap.curTargetLevels[0] - cStatus.cBlur > curSuspention[0].Max) {
         if (IntentSetBL.FL < 50) IntentSetBL.FL++;
       }
@@ -38,7 +37,6 @@ void fLevelBain()
       IntentSetBL.RR = 0;
     } else {
       //    ~ x _   /////////////////////////////////////
-      //tempIfSwitch = 3;
       if (IntentHeap.curTargetLevels[2] - cStatus.cBlur > curSuspention[2].Max) {
         if (IntentSetBL.RL < 50) IntentSetBL.RL++;
       }
@@ -54,7 +52,6 @@ void fLevelBain()
 
   }
   else if ((curFDeviation > curFAmplitude) || (curRDeviation > curRAmplitude)) { //   ^ x ^   ///////////////////////////////////// if front and rear is high, more current amplitude  
-    //tempIfSwitch = 4;
     if (((curFDeviation > curRDeviation) || (curFDeviation > curRDeviation / 2 && IntentSetBL.SWITCH == 3)) && !waitLowUpF) {
       //    _ x ~   /////////////////////////////////////
       if (IntentHeap.curTargetLevels[0] + cStatus.cBlur < curSuspention[0].Min) {
@@ -97,7 +94,7 @@ void fLevelBain()
 void fSUBcore() {
   // 1: Front up;    2: Rear up;     3: Front down;    4: Rear down;
   int suff = 20;
-  int waitS1 = 4;
+  int waitS1 = 6;
   int waitS2 = 6;
   int newSWITCH = ValveSet.SWITCH;
   ValveSet.FL = 0;  ValveSet.FR = 0;
