@@ -34,54 +34,46 @@ void fLCDViewAuto() {
       break;
     default: lcd.print(" --");
   }
-  if (LCDTimer > 10) LCDTimer = 0;
+  lcd.print(IntentSetBL.SWITCH);
+  lcd.setCursor(5, 1);
+  lcd.print(cStatus.pRES);
+  if (cAlertArr.Power != NULL) lcd.print("A!  ");
+  else lcd.print(" "); 
+}
+
+void fLCDViewStM() {
+  if (cStatus.manual == 1) {
+    lcd.clear();
+    cStatus.manual = 2;
+  }
+  if (LCDTimer > 13) LCDTimer = 0;
   LCDTimer++;
+  lcd.setCursor(6, 0); lcd.print("man");
   lcd.setCursor(5, 1);
   switch (LCDTimer) {
-    case 1:
-    case 5:
-      lcd.print(cStatus.pRES);
-      if (cAlertArr.Power != NULL) lcd.print("A!  ");
-      else lcd.print(" "); lcd.print(cStatus.cBlur);
-      break;
-     case 8:
-        lcd.print(tempTimer3); lcd.print(" ");
+    case 1: if (cAlertArr.Valves != NULL) {
+        lcd.print("VAGeRR!");
+        break;
+      }
+    case 3: if (cAlertArr.BanksF != NULL) {
+        lcd.print("BankER!");
+        break;
+      }
+    case 5: if (cAlertArr.BanksR != NULL) {
+        lcd.print("BankER!");
+        break;
+      }
+    case 7: if (cAlertArr.Power != NULL) {
+        lcd.print("AIReRR!");
+        break;
+      }
+    case 9: lcd.print(cStatus.pRES); lcd.print("kpa ");
   }
 }
 
-  void fLCDViewStM() {
-    if (cStatus.manual == 1) {
-      lcd.clear();
-      cStatus.manual = 2;
-    }
-    if (LCDTimer > 13) LCDTimer = 0;
-    LCDTimer++;
-    lcd.setCursor(6, 0); lcd.print("man");
-    lcd.setCursor(5, 1);
-    switch (LCDTimer) {
-      case 1: if (cAlertArr.Valves != NULL) {
-          lcd.print("VAGeRR!");
-          break;
-        }
-      case 3: if (cAlertArr.BanksF != NULL) {
-          lcd.print("FT-eRR!");
-          break;
-        }
-      case 5: if (cAlertArr.BanksR != NULL) {
-          lcd.print("RT-eRR!");
-          break;
-        }
-      case 7: if (cAlertArr.Power != NULL) {
-          lcd.print("AIReRR!");
-          break;
-        }
-      case 9: lcd.print(cStatus.pRES); lcd.print("kpa ");
-    }
-  }
-
-  void fLCDViewSaveStr(byte nom)
-  {
-    lcd.setCursor(0, nom); lcd.print("#");
-    lcd.setCursor(15, nom); lcd.print("#");
-    lcd.setCursor(6, 1); lcd.print("SAVE");
-  }
+void fLCDViewSaveStr(byte nom)
+{
+  lcd.setCursor(0, nom); lcd.print("#");
+  lcd.setCursor(15, nom); lcd.print("#");
+  lcd.setCursor(6, 1); lcd.print("SAVE");
+}

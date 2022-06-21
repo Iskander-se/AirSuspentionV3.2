@@ -19,7 +19,6 @@ void GetLevelInstance (byte addr) {
 
 void fSerialWorker() {
   packFromHU = SerialRead();
-  HwSerial.println("   SerialRead:");
   if (packFromHU.command != 0)
   {
     byte addr = 0;
@@ -92,7 +91,7 @@ void fAirPowerT() {
 
 void fCheckWarnings() {
   bool alert = 0;
-  if (cWarningArr.Power > 2) {
+  if (cWarningArr.Power > 5) {
     cWarningArr.Power = 0;
     alert = 1;
     cAlertArr.Power = "R" + String(cStatus.pRES, DEC) + "P" + String(cStatus.pVAG, DEC);

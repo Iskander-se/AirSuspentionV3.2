@@ -11,7 +11,7 @@ void MainTask() {
   else {
     fLevelBain();
     if (cStatus.door < 2 ) IntentSetBL.SWITCH = 0;
-    else if ((cStatus.door > 10) && (cStatus.door < 200)) cStatus.cBlur = 0;
+    else if ((cStatus.door > 3) && (cStatus.door < 50)) cStatus.cBlur = 0;
     else cStatus.cBlur = 10;
     
     if (!cMenu.nom) {
@@ -29,8 +29,10 @@ void MainTask() {
 
 void LowSerialTask() {
   fCheckWarnings();
-  Seriallog();
+  //Seriallog();
   if (cAlertArr.Valves != NULL) SerialAlertSend2HU("v", cAlertArr.Valves);
+  if (cAlertArr.BanksF != NULL) SerialAlertSend2HU("b", cAlertArr.BanksF);
+  if (cAlertArr.BanksR != NULL) SerialAlertSend2HU("b", cAlertArr.BanksR);
   if (cAlertArr.Power != NULL) SerialAlertSend2HU("p", cAlertArr.Power);
 }
 
