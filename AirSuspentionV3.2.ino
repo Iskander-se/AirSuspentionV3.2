@@ -9,29 +9,20 @@ int tempTimer3 = 1;
 int tempIfSwitch = 0;
 
 ////////// Constants
-#define ePin  PB4 // Engine ON
-#define dPin  PB3 // Door open
+#define ePin  PA15 // Engine ON
+#define dPin  PB4 // Door open
 #define piPin  PB13 //
 #define bN1pin PB14
 #define bN2pin PB15
 #define bN3pin PA8
 
-#define vFL   PA1
-#define vFR   PA2
-#define vRR   PA3
-#define vRL   PA4
-#define vPC   PA6  // реле компрессора
+#define vFL   PA2
+#define vFR   PA4
+#define vRL   PA6
+#define vRR   PB0
+#define vPC   PA1  // реле компрессора
 #define vRES  PA7 //
-#define vEXH  PB0 //
-
-
-//#define vFL   PA0
-//#define vFR   PA1
-//#define vRR   PA2
-//#define vRL   PA3
-//#define vPC   PA5  // реле компрессора
-//#define vRES  PA6 //
-//#define vEXH  PA7 //
+#define vEXH  PA3 //
 
 #define LCDadr 0x27
 #define ADCPadr 0x48
@@ -40,6 +31,8 @@ int tempIfSwitch = 0;
 #define PresetAddr 30
 #define ManualAddr 31
 #define lcdvAddr 32
+#define fcheckDoorAddr 33
+#define fcheckEngineAddr 34
 #define firstValueAddress 60
 
 HardwareSerial HwSerial(PA10, PA9);
@@ -124,6 +117,8 @@ struct {
   int airPowerT = 0;
   int shiftL = 0; // Экспериментальный сдвиг
   int shiftR = 0; // Экспериментальный сдвиг
+  bool fcheckDoor = 0;
+  bool fcheckEngine = 0;
   int8_t PresetLevels[2] = {50, 50};
   int nomPreset = 0;
 } cStatus;
@@ -173,8 +168,8 @@ void setup() {
   lcd.createChar(2, down);
   Serial.begin();
   HwSerial.begin(57600);
-  pinMode(ePin, INPUT);
-  pinMode(dPin, INPUT);
+  pinMode(ePin, INPUT_PULLUP);
+  pinMode(dPin, INPUT_PULLUP);
   pinMode(bN1pin, INPUT);
   pinMode(bN2pin, INPUT);
   pinMode(bN3pin, INPUT);
@@ -204,8 +199,8 @@ void setup() {
   GetPreSetup();// Начальная инициализация параметров и состояния
   GetLevelHwSetup(); // Инициализация записаных значений настроек датчиков
   GetLevelInstance(cStatus.nomPreset);
-  
-  for (int i = 0; i < 10; i++ ){
+
+  for (int i = 0; i < 10; i++ ) {
     GetLevels();
     delay(50);
   }

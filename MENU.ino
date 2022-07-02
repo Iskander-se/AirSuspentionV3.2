@@ -9,7 +9,7 @@ void fLCDmenu()
   {
     case 1:
 
-      lcd.setCursor(5, 0); lcd.print(" MENU");
+      lcd.setCursor(5, 0); lcd.print(" MENU  ");
 
       break;
     case 2:  // Выбор пресета
@@ -19,7 +19,7 @@ void fLCDmenu()
       if (cMenu.wait > 2) {
         lcd.setCursor(4, 0); lcd.print("Preset "); lcd.print(cStatus.nomPreset); ReadLevelPreset(cStatus.nomPreset);
         lcd.setCursor(3, 1); lcd.print(cStatus.PresetLevels[0]); lcd.print("%  "); lcd.setCursor(6, 1); lcd.print(" <> "); lcd.print(cStatus.PresetLevels[1]); lcd.print("% ");
-        
+
       } else {
         cStatus.lcdv = 1;
         GetLevelInstance(cStatus.nomPreset);
@@ -137,7 +137,7 @@ void fLCDmenu()
           lcd.setCursor(0, 1); lcd.print("    --------    ");
         }
         else {
-          lcd.setCursor(1, 1); lcd.print("Charge "); lcd.print(cStatus.pRES); lcd.print("  ");
+          lcd.setCursor(1, 1); lcd.print(" Charge "); lcd.print(cStatus.pRES); lcd.print("    ");
           ValveSet.FL = 0;
           ValveSet.FR = 0;
           ValveSet.RL = 0;
@@ -178,6 +178,55 @@ void fLCDmenu()
       break;
 
     case 44:
+
+      if (cMenu.wait > 5) {
+
+        switch (cMenu.shift) {
+          case 1:
+            lcd.setCursor(0, 0); lcd.print("   CheckEngine   ");
+            lcd.setCursor(0, 1);
+            if (cStatus.fcheckEngine) lcd.print("   ON > OFF   "); else lcd.print("   0FF > ON   ");
+            break;
+          case 2:    lcd.setCursor(0, 0); lcd.print("   CheckDoor  ");
+            lcd.setCursor(0, 1);
+            if (cStatus.fcheckDoor) lcd.print("   ON > OFF   "); else lcd.print("   0FF > ON   ");
+            break;
+          case 3:
+            if (cMenu.wait > 7)cMenu.wait = 7;
+            lcd.setCursor(0, 0); lcd.print(" HARDWARE SET  ");
+            lcd.setCursor(0, 1); lcd.print("  Level SET   ");
+            break;
+          default:
+            lcd.setCursor(0, 0); lcd.print("HARDWARE SET  ");
+            cMenu.shift = 1;
+        }
+      } else {
+        switch (cMenu.shift) {
+
+          case 1:
+            cStatus.fcheckEngine = !cStatus.fcheckEngine;
+            lcd.setCursor(0, 1);
+            if (cStatus.fcheckEngine) lcd.print("   ON > OFF   "); else lcd.print("   0FF > ON   ");
+            SetPreSetup();
+            cMenu.wait = 0;
+            break;
+          case 2:
+            cStatus.fcheckDoor = !cStatus.fcheckDoor;
+            lcd.setCursor(0, 1);
+            if (cStatus.fcheckDoor) lcd.print("   ON > OFF   "); else lcd.print("   0FF > ON   ");
+            SetPreSetup();
+            cMenu.wait = 0;
+            break;
+          case 3:
+            cMenu.nom = 48;
+            cMenu.wait = 20;
+            cMenu.shift = 0;
+            lcd.clear();
+        }
+      }
+      break;
+
+    case 48:
       int curArr[4];
       for (int i = 0; i < 4; i++) curArr[i] = curSuspention[i].RAW;
       fLCDView4Int(curArr);
@@ -207,8 +256,8 @@ void fLCDmenu()
         int nom = fSaveMinMax(cMenu.shift);
         fLCDViewSaveStr(nom);
         cMenu.wait = 15;
-        cMenu.nom = 44;
         tone(piPin, 1000, 110);
+        cMenu.shift = 0;
         lcd.clear();
       }
       break;
@@ -248,7 +297,7 @@ void fLCDmenu()
     ValveSet.SWITCH = 4;
     SetPreSetup();
     lcd.clear();
-    //tone(piPin, 1100, 110); delay(300);
+    tone(piPin, 1100, 110); delay(30);
     tone(piPin, 1000, 110);
   }
 }

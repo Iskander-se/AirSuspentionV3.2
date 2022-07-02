@@ -123,7 +123,7 @@ void Seriallog() {
   str = str + " ";
   str = str + String(tempTimer3, DEC);
 
-  str = str + " || wait:" + String(cStatus.wait) + " S:" + String(cStatus.servicemode) + " M:" + String(cStatus.manual);
+  str = str + " || wait:" + String(cStatus.wait) + " S:" + String(cStatus.servicemode) + " M:" + String(cStatus.manual)+ " E:" + String(cStatus.engine)+ " D:" + String(cStatus.door);
   str = str + " || " + String(IntentSetBL.FL) + "-" + String(IntentSetBL.FR) + "-" + String(IntentSetBL.RL) + "-" + String(IntentSetBL.RR) + "-" + String(IntentSetBL.SWITCH);
   //  BtSerial.print(" wLowUpF:"); BtSerial.print(waitLowUpF);
   //  BtSerial.print(" wLowUpR:"); BtSerial.print(waitLowUpR);

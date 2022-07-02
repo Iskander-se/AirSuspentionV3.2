@@ -34,11 +34,12 @@ void fLCDViewAuto() {
       break;
     default: lcd.print(" --");
   }
-  lcd.print(IntentSetBL.SWITCH);
   lcd.setCursor(5, 1);
   lcd.print(cStatus.pRES);
   if (cAlertArr.Power != NULL) lcd.print("A!  ");
-  else lcd.print(" "); 
+  else {
+    lcd.print(" "); 
+  }
 }
 
 void fLCDViewStM() {

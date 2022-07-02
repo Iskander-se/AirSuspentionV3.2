@@ -10,10 +10,10 @@ void MainTask() {
   if (cStatus.manual) fManualMode();
   else {
     fLevelBain();
-    if (cStatus.door < 2 ) IntentSetBL.SWITCH = 0;
+    if (cStatus.door < 2) IntentSetBL.SWITCH = 0;
     else if ((cStatus.door > 3) && (cStatus.door < 50)) cStatus.cBlur = 0;
     else cStatus.cBlur = 10;
-    
+
     if (!cMenu.nom) {
       fSUBcore();
     }
@@ -29,7 +29,7 @@ void MainTask() {
 
 void LowSerialTask() {
   fCheckWarnings();
-  //Seriallog();
+  Seriallog();
   if (cAlertArr.Valves != NULL) SerialAlertSend2HU("v", cAlertArr.Valves);
   if (cAlertArr.BanksF != NULL) SerialAlertSend2HU("b", cAlertArr.BanksF);
   if (cAlertArr.BanksR != NULL) SerialAlertSend2HU("b", cAlertArr.BanksR);
@@ -135,7 +135,7 @@ void fChargeRES()
     ValveSet.WP = 0;
     return;
   }
-  if (cStatus.pRES > 980 && ValveSet.SWITCH != 3) {
+  if (cStatus.pRES > 990 && ValveSet.SWITCH != 3) {
     cStatus.airPowerF = 2; // OVER
     digitalWrite(vEXH, 1);
     digitalWrite(vRES, 0);
