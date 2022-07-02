@@ -55,6 +55,8 @@ void GetPreSetup()
 {
   //cStatus.servicemode;
   cStatus.manual = EEPROM.read(ManualAddr);
+  cStatus.fcheckDoor = EEPROM.read(fcheckDoorAddr);
+  cStatus.fcheckEngine = EEPROM.read(fcheckEngineAddr);
   cStatus.lcdv = EEPROM.read(lcdvAddr);
   cStatus.nomPreset = EEPROM.read(PresetAddr);
 }
@@ -64,6 +66,8 @@ void SetPreSetup()
   EEPROM.update(ManualAddr, cStatus.manual);
   EEPROM.update(lcdvAddr, cStatus.lcdv);
   EEPROM.update(PresetAddr, cStatus.nomPreset);
+  EEPROM.update(fcheckDoorAddr, cStatus.fcheckDoor);
+  EEPROM.update(fcheckEngineAddr, cStatus.fcheckEngine);
 }
 void ReadLevelPreset(byte addr)
 {

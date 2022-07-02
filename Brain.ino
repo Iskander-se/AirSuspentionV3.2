@@ -52,6 +52,7 @@ void fLevelBain()
 
   }
   else if ((curFDeviation > curFAmplitude) || (curRDeviation > curRAmplitude)) { //   ^ x ^   ///////////////////////////////////// if front and rear is high, more current amplitude  
+    if (waitLowUpR) curRDeviation=0;
     if (((curFDeviation > curRDeviation) || (curFDeviation > curRDeviation / 2 && IntentSetBL.SWITCH == 3)) && !waitLowUpF) {
       //    _ x ~   /////////////////////////////////////
       if (IntentHeap.curTargetLevels[0] + cStatus.cBlur < curSuspention[0].Min) {
