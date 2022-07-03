@@ -104,7 +104,7 @@ void fSUBcore() {
   {
     case 1 : // Front up
       ValveSet.FL = (IntentSetBL.FL > waitS1);  ValveSet.FR = (IntentSetBL.FR > waitS1);
-      if (cStatus.pVAG > 160 && cStatus.pVAG < 760 && (IntentSetBL.FL > waitS2 || IntentSetBL.FR > waitS2)) newSWITCH = 1;
+      if (cStatus.pVAG > 160 && cStatus.pVAG < 795 && (IntentSetBL.FL > waitS2 || IntentSetBL.FR > waitS2)) newSWITCH = 1;
       else {
         newSWITCH = 0;
         IntentSetBL.HOPE++;
@@ -113,7 +113,7 @@ void fSUBcore() {
       break;
     case 2:  // Rear up
       ValveSet.RL = (IntentSetBL.RL > waitS1);  ValveSet.RR = (IntentSetBL.RR > waitS1);
-      if (cStatus.pVAG > 170 && cStatus.pVAG < 430 && (IntentSetBL.RL > waitS2 || IntentSetBL.RR > waitS2)) newSWITCH = 1;
+      if (cStatus.pVAG > 170 && cStatus.pVAG < 540 && (IntentSetBL.RL > waitS2 || IntentSetBL.RR > waitS2)) newSWITCH = 1;
       else {
         newSWITCH = 0;
         IntentSetBL.HOPE++;

@@ -24,10 +24,12 @@ void GetPressure()
   ADCP.setCompareChannels(ADS1115_COMP_0_GND);
   ADCP.startSingleMeasurement();
   while (ADCP.isBusy()) {}
-  cStatus.pRES = map(ADCP.getRawResult(), 2667, 24011, 0, 1020);
+  cStatus.pRES = map(ADCP.getRawResult(), 2667, 23511, 0, 1120);
+  //cStatus.pRES = map(ADCP.getRawResult(), 2667, 24011, 0, 1020);
 
   ADCP.setCompareChannels(ADS1115_COMP_1_GND);
   ADCP.startSingleMeasurement();
   while (ADCP.isBusy()) {}
-  cStatus.pVAG = map(ADCP.getRawResult(), 3414, 8890, 250, 1070);
+  cStatus.pVAG = map(ADCP.getRawResult(), 3414, 8800, 250, 1070);
+  //cStatus.pVAG = map(ADCP.getRawResult(), 3414, 8890, 250, 1070);
 }

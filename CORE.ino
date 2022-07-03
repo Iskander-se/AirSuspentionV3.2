@@ -76,11 +76,11 @@ void fVAGBlockWork() {
   switch (ValveSet.SWITCH) {
     case 1 : //UP
       digitalWrite(vEXH, 0);
-      if (cStatus.pRES > 800) {         //  work it from reciver
+      if (cStatus.pRES > 810) {         //  work it from reciver
         digitalWrite(vRES, 1);
         digitalWrite(vPC, 0);
         ValveSet.WP = 0;
-      } else if (cStatus.pRES < 650) { ///  work it without reciver
+      } else if (cStatus.pRES < 650) { //  work it without reciver
         digitalWrite(vRES, 0);
         digitalWrite(vPC, 1);
         ValveSet.WP = 2;
@@ -102,7 +102,7 @@ void fVAGBlockWork() {
       break;
     case 4:  //FREE2CRARGE
       if (cStatus.wait > 1) cStatus.airPowerF = 0;
-      if ((cStatus.pRES > 350 && cStatus.pRES < 860) || ValveSet.WP == 1) {
+      if ((cStatus.pRES > 350 && cStatus.pRES < 840) || ValveSet.WP == 1) {
         ValveSet.WP = 1;
         fChargeRES();
       }
@@ -128,15 +128,17 @@ void fVAGBlockWork() {
 
 void fChargeRES()
 {
-  if (cStatus.airPowerF == 2) {
+  if (cStatus.airPowerF > 1) {
+    cStatus.airPowerF--;
     digitalWrite(vEXH, 0);
     digitalWrite(vRES, 0);
     digitalWrite(vPC, 0);
     ValveSet.WP = 0;
+    cStatus.wait=20;
     return;
   }
   if (cStatus.pRES > 990 && ValveSet.SWITCH != 3) {
-    cStatus.airPowerF = 2; // OVER
+    cStatus.airPowerF = 3; // OVER
     digitalWrite(vEXH, 1);
     digitalWrite(vRES, 0);
     digitalWrite(vPC, 0);

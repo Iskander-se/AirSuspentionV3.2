@@ -71,7 +71,7 @@ void fSerialWorker() {
 }
 
 void fAirPowerT() {
-  if (cStatus.airPowerF == 2) {
+  if (cStatus.airPowerF > 1) {
     for (int i = 0; i < 4; i++ ) if (cWarningArr.Power > 0) cWarningArr.Power--;
   }
   if (cStatus.airPowerF && ValveSet.WP)  {

@@ -105,16 +105,16 @@ struct {
   int servicemode = 0;
   int manual = 0;
   bool alert = 0;
-  int airPowerF = 1; // 0=OFF; 1=ON; 2=OVER
+  int airPowerF = 0; // 0=OFF; 1=ON; 2=OVER
   int engine = 0;
   int door = 0;
   bool mute = 0;
   int lcdv = 1;
   int pVAG ;
   int pRES ;
-  int wait;
+  int wait=10;
   int cBlur = 10;
-  int airPowerT = 0;
+  int airPowerT = 3;
   int shiftL = 0; // Экспериментальный сдвиг
   int shiftR = 0; // Экспериментальный сдвиг
   bool fcheckDoor = 0;
