@@ -10,9 +10,9 @@ void MainTask() {
   if (cStatus.manual) fManualMode();
   else {
     fLevelBain();
-    if (cStatus.door < 2) IntentSetBL.SWITCH = 0;
-    else if ((cStatus.door > 3) && (cStatus.door < 50)) cStatus.cBlur = 0;
-    else cStatus.cBlur = 10;
+    if (cStatus.door < 3) IntentSetBL.SWITCH = 0;
+    else if ((cStatus.door > 3) && (cStatus.door < 50) && cStatus.fcheckDoor) cStatus.cBlur = 0;
+    else cStatus.cBlur = 15;
 
     if (!cMenu.nom) {
       fSUBcore();
@@ -134,7 +134,7 @@ void fChargeRES()
     digitalWrite(vRES, 0);
     digitalWrite(vPC, 0);
     ValveSet.WP = 0;
-    cStatus.wait=20;
+    cStatus.wait = 20;
     return;
   }
   if (cStatus.pRES > 990 && ValveSet.SWITCH != 3) {

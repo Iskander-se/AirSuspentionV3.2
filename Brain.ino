@@ -5,6 +5,9 @@ void fLevelBain()
   int16_t curFAmplitude = curSuspention[0].Apld + curSuspention[1].Apld + cStatus.cBlur; // Амплитуда + слепая зона
   int16_t curRAmplitude = curSuspention[2].Apld + curSuspention[3].Apld + cStatus.cBlur; // Амплитуда + слепая зона
 
+  curFAmplitude = curFAmplitude * 2; //for more latency
+  curRAmplitude = curRAmplitude * 2; //for more latency
+
   int heelFront = curSuspention[0].Avg - curSuspention[1].Avg; // Крен по оси
   int heelRear = curSuspention[2].Avg - curSuspention[3].Avg; // Крен по оси
 
@@ -51,8 +54,8 @@ void fLevelBain()
     }
 
   }
-  else if ((curFDeviation > curFAmplitude) || (curRDeviation > curRAmplitude)) { //   ^ x ^   ///////////////////////////////////// if front and rear is high, more current amplitude  
-    if (waitLowUpR) curRDeviation=0;
+  else if ((curFDeviation > curFAmplitude) || (curRDeviation > curRAmplitude)) { //   ^ x ^   ///////////////////////////////////// if front and rear is high, more current amplitude
+    if (waitLowUpR) curRDeviation = 0;
     if (((curFDeviation > curRDeviation) || (curFDeviation > curRDeviation / 2 && IntentSetBL.SWITCH == 3)) && !waitLowUpF) {
       //    _ x ~   /////////////////////////////////////
       if (IntentHeap.curTargetLevels[0] + cStatus.cBlur < curSuspention[0].Min) {
@@ -147,7 +150,7 @@ void fSUBcore() {
     ///////SERVICEMOD ===========////   3: Front down;    4: Rear down;
 
     //Разгрузка подушек висящих на подьемнике или домкрате
-    //For make pressure to low when stand on services lift  
+    //For make pressure to low when stand on services lift
     if (cStatus.servicemode) {
       if (cWarningArr.BanksF > 15 && IntentSetBL.SWITCH == 3) {
         cWarningArr.BanksF = 0;
